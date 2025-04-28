@@ -3,14 +3,14 @@ import Feedback from "../Feedback/Feedback";
 import Options from "../Options/Options";
 import Description from "../description/Description";
 import Notification from "../Notification/Notification";
-
 import "./App.css";
 
 export default function App() {
-  const [values, setValues] = useState({
-    good: 0,
-    neutral: 0,
-    bad: 0,
+  const [values, setValues] = useState(() => {
+    const savedValues = localStorage.getItem("values");
+    return savedValues
+      ? JSON.parse(savedValues)
+      : { good: 0, neutral: 0, bad: 0 };
   });
 
   const totalValue = values.good + values.neutral + values.bad;
@@ -33,15 +33,8 @@ export default function App() {
   };
 
   useEffect(() => {
-    const savedValues = JSON.parse(localStorage.getItem("values"));
-    if (savedValues) {
-      setValues(savedValues);
-    }
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem("values", JSON.stringify(values));
-  }, [values]);
+  }, [values]); //
 
   return (
     <>
