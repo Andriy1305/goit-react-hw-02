@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Feedback from "../Feedback/Feedback";
 import Options from "../Options/Options";
-import Description from "../descrsption/Description";
+import Description from "../description/Description";
+import Notification from "../Notification/Notification";
 
 import "./App.css";
 
@@ -10,52 +11,24 @@ export default function App() {
     good: 0,
     neutral: 0,
     bad: 0,
-    total: 0,
-    positive: 0,
   });
 
-  // Визначаємо totalValue в окремій змінній
   const totalValue = values.good + values.neutral + values.bad;
+  const positive =
+    totalValue > 0 ? Math.round((values.good / totalValue) * 100) : 0;
 
-  useEffect(() => {
-    const positive =
-      totalValue > 0 ? Math.round((values.good / totalValue) * 100) : 0;
-
+  const updateFeedback = (feedbackType) => {
     setValues((prevValues) => ({
       ...prevValues,
-      total: totalValue,
-      positive: positive,
-    }));
-  }, [values.good, values.neutral, values.bad, totalValue]);
-
-  const goodValue = () => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      good: prevValues.good + 1,
+      [feedbackType]: prevValues[feedbackType] + 1,
     }));
   };
 
-  const neutralValue = () => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      neutral: prevValues.neutral + 1,
-    }));
-  };
-
-  const badlValue = () => {
-    setValues((prevValues) => ({
-      ...prevValues,
-      bad: prevValues.bad + 1,
-    }));
-  };
-
-  const resetValues = () => {
+  const resetValue = () => {
     setValues({
       good: 0,
       neutral: 0,
       bad: 0,
-      total: 0,
-      positive: 0,
     });
   };
 
@@ -74,22 +47,20 @@ export default function App() {
     <>
       <Description />
       <Options
-        goodValue={goodValue}
-        neutralValue={neutralValue}
-        badlValue={badlValue}
-        resetValues={resetValues}
+        updateFeedback={updateFeedback}
+        resetValue={resetValue}
         totalFeedback={totalValue}
       />
 
       {totalValue === 0 ? (
-        <p>No feedback yeat</p>
+        <Notification />
       ) : (
         <Feedback
           good={values.good}
           neutral={values.neutral}
           bad={values.bad}
-          total={values.total}
-          positive={values.positive}
+          total={totalValue}
+          positive={positive}
         />
       )}
     </>

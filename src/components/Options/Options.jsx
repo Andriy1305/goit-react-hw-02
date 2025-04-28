@@ -1,27 +1,20 @@
 import css from "./Options.module.css";
 
-export default function Options({
-  goodValue,
-  neutralValue,
-  badlValue,
-  resetValues,
-  totalFeedback,
-}) {
+export default function Options({ updateFeedback, resetValue, totalFeedback }) {
   return (
     <div className={css.options}>
-      <button className={css.button} onClick={goodValue}>
+      <button className={css.button} onClick={() => updateFeedback("good")}>
         Good
       </button>
-      <button className={css.button} onClick={neutralValue}>
+      <button className={css.button} onClick={() => updateFeedback("neutral")}>
         Neutral
       </button>
-      <button className={css.button} onClick={badlValue}>
+      <button className={css.button} onClick={() => updateFeedback("bad")}>
         Bad
       </button>
 
-      {/* Кнопка для скидання з'являється тільки, коли є хоча б один відгук */}
       {totalFeedback > 0 && (
-        <button className={css.button} onClick={resetValues}>
+        <button className={css.button} onClick={resetValue}>
           Reset
         </button>
       )}
